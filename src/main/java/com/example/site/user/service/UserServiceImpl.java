@@ -1,5 +1,7 @@
 package com.example.site.user.service;
 
+import com.example.site.error.ErrorCode;
+import com.example.site.error.exception.BusinessException;
 import com.example.site.user.dto.UserDto;
 import com.example.site.user.entity.User;
 import com.example.site.user.repository.UserRepository;
@@ -24,7 +26,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userExisted = userRepository.findByEmail(registerUserInfo.getEmail());
 
         if(userExisted.isPresent())
-            throw new LoginException();
+            throw new BusinessException(ErrorCode.EMAIL_DUPLCATION);
 
         String password = passwordEncoder.encode(registerUserInfo.getPassword());
 
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Optional<User> user = userRepository.findById(Integer.parseInt(userDetails.getUsername()));
+
         if(user.isPresent())
             userRepository.deleteById(Integer.parseInt(userDetails.getUsername()));
     }
