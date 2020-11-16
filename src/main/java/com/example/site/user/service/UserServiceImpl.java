@@ -5,24 +5,25 @@ import com.example.site.error.exception.BusinessException;
 import com.example.site.user.dto.UserDto;
 import com.example.site.user.entity.User;
 import com.example.site.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.LoginException;
 import java.util.Optional;
 
+@RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void registerUserInfo(UserDto.RegisterUserInfo registerUserInfo) throws LoginException {
+    public void registerUserInfo(UserDto.RegisterUserInfo registerUserInfo){
         Optional<User> userExisted = userRepository.findByEmail(registerUserInfo.getEmail());
 
         if(userExisted.isPresent())
