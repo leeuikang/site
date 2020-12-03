@@ -1,20 +1,21 @@
 package com.example.site.board.service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import com.example.site.board.dto.BoardResponseDto;
+import com.example.site.board.dto.BoardSaveRequestDto;
+import com.example.site.board.dto.BoardUpdateRequestDto;
+
+
+import java.util.List;
 
 public interface BoardService {
 
-    Map<String, Object> selectBoardList(Map<String, Object> map) throws Exception;
+    public List<BoardResponseDto> findAll();
 
-    Map<String, Object> selectBoardSearchList(Map<String, Object> map) throws Exception;
+    public BoardResponseDto findById(Long boardNum);
 
-    Map<String, Object> selectBoardDetails(Map<String, Object> map) throws Exception;
+    public Long save(BoardSaveRequestDto boardSaveRequestDto);
 
-    void insertBoard(Map<String, Object> map, HttpServletRequest request) throws Exception;
+    public Long update(Long boardNum, BoardUpdateRequestDto boardUpdateRequestDto);
 
-    boolean updateBoard(Map<String, Object> map, HttpServletRequest request) throws Exception;
-
-    boolean deleteBoard(Map<String, Object> map, HttpServletRequest request) throws Exception;
-
+    public void delete(Long boardNum);
 }

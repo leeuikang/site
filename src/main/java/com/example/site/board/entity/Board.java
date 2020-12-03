@@ -1,6 +1,7 @@
 package com.example.site.board.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,15 @@ public class Board extends TimeEntity{
     @Column(name = "board_content")
     private String boardContent;
 
+    @Builder
+    public Board(String boardWriter, String boardTitle, String boardContent) {
+        this.boardWriter = boardWriter;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+    }
+
+    public void update(String boardTitle, String boardContent){
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+    }
 }
