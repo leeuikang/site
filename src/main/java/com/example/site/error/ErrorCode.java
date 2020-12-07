@@ -5,10 +5,14 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 
-    //common
+    //board
     POST_IS_NOT_EXIST(400, "post is not exist"),
     //member
     EMAIL_DUPLICATION(400,"email is duplication"),
+    LOGIN_DATA_INVALID_EMAIL(400, "email is not exist"),
+
+    LOGIN_DATA_INVALID_PASSWORD(400, "password is incorrect"),
+
     LOGIN_DATA_INVALID(400, "login data is invalid");
 
     private int status;
