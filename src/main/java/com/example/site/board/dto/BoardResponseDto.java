@@ -9,11 +9,13 @@ public class BoardResponseDto {
     private String boardTitle;
     private String boardWriter;
     private String boardContent;
+    private int boardHitNum;
 
     public BoardResponseDto(Board board) {
         this.boardNum = board.getBoardNum();
         this.boardTitle = board.getBoardTitle();
         this.boardWriter = board.getBoardWriter();
         this.boardContent = board.getBoardContent();
+        this.boardHitNum = board.getBoardHit();
     }
 }

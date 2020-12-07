@@ -27,6 +27,9 @@ public class Board extends TimeEntity{
     @Column(name = "board_content")
     private String boardContent;
 
+    @Column(name = "board_hit", columnDefinition = "int default 0")
+    private int boardHit;
+
     @Builder
     public Board(String boardWriter, String boardTitle, String boardContent) {
         this.boardWriter = boardWriter;
@@ -37,5 +40,9 @@ public class Board extends TimeEntity{
     public void update(String boardTitle, String boardContent){
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
+    }
+
+    public void hitUpdate(){
+        this.boardHit = this.boardHit + 1;
     }
 }

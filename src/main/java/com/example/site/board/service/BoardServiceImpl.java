@@ -5,8 +5,11 @@ import com.example.site.board.dto.BoardSaveRequestDto;
 import com.example.site.board.dto.BoardUpdateRequestDto;
 import com.example.site.board.entity.Board;
 import com.example.site.board.repository.BoardRepository;
+import com.example.site.error.ErrorCode;
+import com.example.site.error.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,10 +31,12 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public BoardResponseDto findById(Long boardNum) {
         Board board = boardRepository.findById(boardNum)
-                .orElseThrow(() -> new IllegalArgumentException("[boardnum = " + boardNum +"] 해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_IS_NOT_EXIST));
+
+        hitUpdate(board);
 
         return new BoardResponseDto(board);
     }
@@ -47,7 +52,7 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public Long update(Long boardNum, BoardUpdateRequestDto boardUpdateRequestDto) {
         Board board = boardRepository.findById(boardNum)
-                .orElseThrow(() -> new IllegalArgumentException("[boardnum = " + boardNum +"] 해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_IS_NOT_EXIST));
 
         board.update(boardUpdateRequestDto.getBoardTitle(), boardUpdateRequestDto.getBoardContent());
 
@@ -58,8 +63,14 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public void delete(Long boardNum) {
         Board board = boardRepository.findById(boardNum)
-                .orElseThrow(() -> new IllegalArgumentException("[boardnum = " + boardNum +"] 해당 게시글이 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.POST_IS_NOT_EXIST));
 
         boardRepository.delete(board);
+    }
+
+    @Override
+    public void hitUpdate(Board board) {
+        board.hitUpdate();
+        boardRepository.save(board);
     }
 }

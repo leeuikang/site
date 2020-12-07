@@ -7,7 +7,6 @@ import com.example.site.user.entity.User;
 import com.example.site.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,7 +26,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userExisted = userRepository.findByEmail(registerUserInfo.getEmail());
 
         if(userExisted.isPresent())
-            throw new BusinessException(ErrorCode.EMAIL_DUPLCATION);
+            throw new BusinessException(ErrorCode.EMAIL_DUPLICATION);
 
         String password = passwordEncoder.encode(registerUserInfo.getPassword());
 
