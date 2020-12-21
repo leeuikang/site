@@ -4,11 +4,14 @@ import com.example.site.board.dto.BoardResponseDto;
 import com.example.site.board.dto.BoardSaveRequestDto;
 import com.example.site.board.dto.BoardUpdateRequestDto;
 import com.example.site.board.service.BoardServiceImpl;
+
+import com.example.site.board.service.FileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +20,8 @@ import java.util.List;
 @RestController
 public class BoardController {
 
-    public final BoardServiceImpl boardService;
+    private final BoardServiceImpl boardService;
+    private final FileServiceImpl fileService;
 
     @GetMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<BoardResponseDto>> findAll(){
@@ -36,9 +40,13 @@ public class BoardController {
     }
 
     @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Long> save(@RequestBody BoardSaveRequestDto boardSaveRequestDto){
+    public ResponseEntity<Long> save(@RequestPart("file") MultipartFile files, @RequestBody BoardSaveRequestDto boardSaveRequestDto){
 
-        Long savedBoardNum = boardService.save(boardSaveRequestDto);
+        /*long fileId = fileService.saveFile();
+
+        boardSaveRequestDto.setFileId(fileId);*/
+
+        long savedBoardNum = boardService.save(boardSaveRequestDto);
 
         return new ResponseEntity<>(savedBoardNum, HttpStatus.CREATED);
     }
