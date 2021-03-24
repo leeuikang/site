@@ -30,15 +30,11 @@ public class Board extends TimeEntity{
     @Column(name = "board_hit", columnDefinition = "int default 0")
     private int boardHit;
 
-    @Column(name = "file_id")
-    private long fileId;
-
     @Builder
-    public Board(String boardWriter, String boardTitle, String boardContent, long fileId) {
+    public Board(String boardWriter, String boardTitle, String boardContent) {
         this.boardWriter = boardWriter;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
-        this.fileId = fileId;
     }
 
     public void update(String boardTitle, String boardContent){

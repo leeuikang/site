@@ -6,4 +6,6 @@ public interface FileService {
 
     public Long saveFile(FileUploadDto fileUploadDto);
 
+    public FileUploadDto getFile(long id);
+
 }

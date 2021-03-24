@@ -3,6 +3,7 @@ package com.example.site.board.controller;
 import com.example.site.board.dto.BoardResponseDto;
 import com.example.site.board.dto.BoardSaveRequestDto;
 import com.example.site.board.dto.BoardUpdateRequestDto;
+import com.example.site.board.dto.FileUploadDto;
 import com.example.site.board.service.BoardServiceImpl;
 
 import com.example.site.board.service.FileServiceImpl;
@@ -13,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
+import java.io.File;
 
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -40,14 +44,42 @@ public class BoardController {
     }
 
     @PostMapping(value = "", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Long> save(@RequestPart("file") MultipartFile files, @RequestBody BoardSaveRequestDto boardSaveRequestDto){
+    public ResponseEntity<Long> save(@RequestParam("boardTitle") String boardTitle,
+                                     @RequestParam("boardContent") String boardContent,
+                                     @RequestParam("boardWriter") String boardWriter,
+                                     @RequestParam("file") List<MultipartFile> files){
+        String path = "C:/Users/jaeyoung/IdeaProjects/site/uploads/";
+        long savedBoardNum = boardService.save(BoardSaveRequestDto.builder()
+                .boardTitle(boardTitle)
+                .boardContent(boardContent)
+                .boardWriter(boardWriter)
+                .build());
 
-        /*long fileId = fileService.saveFile();
-
-        boardSaveRequestDto.setFileId(fileId);*/
-
-        long savedBoardNum = boardService.save(boardSaveRequestDto);
-
+        try {
+            if(!new File(path).exists()){
+                try{
+                    new File(path).mkdir();
+                }
+                catch (Exception e){
+                    //e.getStackTrace();
+                }
+            }
+            if (!files.isEmpty()) {
+                for(MultipartFile file : files){
+                    String fileUUID = UUID.randomUUID().toString();
+                    fileService.saveFile(FileUploadDto.builder()
+                        .fileName(fileUUID)
+                        .fileOriginName(file.getOriginalFilename())
+                        .boardNum(savedBoardNum)
+                        .filePath(path+fileUUID)
+                        .build());
+                    file.transferTo(new File(path+fileUUID));
+                }
+            }
+        }
+        catch (Exception e){
+            //e.printStackTrace();
+        }
         return new ResponseEntity<>(savedBoardNum, HttpStatus.CREATED);
     }
 
@@ -66,5 +98,6 @@ public class BoardController {
 
         return new ResponseEntity<>(boardNum, HttpStatus.NO_CONTENT);
     }
+
 
 }

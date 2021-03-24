@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "file")
-public class File {
+public class FileStorage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,14 @@ public class File {
     @Column(name = "file_path")
     private String filePath;
 
+    @Column(name = "board_num")
+    private long board_num;
+
     @Builder
-    public File(String fileName, String fileOriginName, String filePath) {
+    public FileStorage(String fileName, String fileOriginName, String filePath, long board_num) {
         this.fileName = fileName;
         this.fileOriginName = fileOriginName;
         this.filePath = filePath;
+        this.board_num = board_num;
     }
 }

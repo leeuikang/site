@@ -10,7 +10,6 @@ public class BoardResponseDto {
     private String boardWriter;
     private String boardContent;
     private int boardHitNum;
-    private long fileId;
 
     public BoardResponseDto(Board board) {
         this.boardNum = board.getBoardNum();
@@ -18,6 +17,5 @@ public class BoardResponseDto {
         this.boardWriter = board.getBoardWriter();
         this.boardContent = board.getBoardContent();
         this.boardHitNum = board.getBoardHit();
-        this.fileId = board.getFileId();
     }
 }
