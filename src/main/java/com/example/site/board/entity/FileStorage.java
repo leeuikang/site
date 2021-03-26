@@ -1,13 +1,12 @@
 package com.example.site.board.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "file")
@@ -27,14 +26,21 @@ public class FileStorage {
     @Column(name = "file_path")
     private String filePath;
 
+    @Column(name = "file_delete")
+    @ColumnDefault("false")
+    private boolean fileDelete;
+
     @Column(name = "board_num")
-    private long board_num;
+    private long boardNum;
 
     @Builder
-    public FileStorage(String fileName, String fileOriginName, String filePath, long board_num) {
+    public FileStorage(String fileName, String fileOriginName, String filePath, long boardNum) {
         this.fileName = fileName;
         this.fileOriginName = fileOriginName;
         this.filePath = filePath;
-        this.board_num = board_num;
+        this.fileDelete = false;
+        this.boardNum = boardNum;
     }
+
+
 }

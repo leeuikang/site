@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -18,20 +19,19 @@ public class FileServiceImpl implements FileService {
     @Transactional
     @Override
     public Long saveFile(FileUploadDto fileUploadDto) {
-
         return fileRepository.save(fileUploadDto.toEntity()).getId();
 
     }
 
+    @Transactional
     @Override
-    public FileUploadDto getFile(long id) {
+    public Long updateFile(FileStorage fileStorage){
+        return fileRepository.save(fileStorage).getId();
+    }
+    @Override
+    public List<FileStorage> getFile(long boardNum) {
 
-        FileStorage file = fileRepository.findById(id).get();
+        return fileRepository.findByBoardNum(boardNum);
 
-        return FileUploadDto.builder()
-                .fileName(file.getFileName())
-                .fileOriginName(file.getFileOriginName())
-                .filePath(file.getFilePath())
-                .build();
     }
 }

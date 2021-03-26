@@ -1,9 +1,7 @@
 package com.example.site.board.controller;
 
-import com.example.site.board.dto.BoardResponseDto;
-import com.example.site.board.dto.BoardSaveRequestDto;
-import com.example.site.board.dto.BoardUpdateRequestDto;
-import com.example.site.board.dto.FileUploadDto;
+import com.example.site.board.dto.*;
+import com.example.site.board.entity.FileStorage;
 import com.example.site.board.service.BoardServiceImpl;
 
 import com.example.site.board.service.FileServiceImpl;
@@ -48,7 +46,9 @@ public class BoardController {
                                      @RequestParam("boardContent") String boardContent,
                                      @RequestParam("boardWriter") String boardWriter,
                                      @RequestParam("file") List<MultipartFile> files){
+
         String path = "C:/Users/jaeyoung/IdeaProjects/site/uploads/";
+
         long savedBoardNum = boardService.save(BoardSaveRequestDto.builder()
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
@@ -61,24 +61,26 @@ public class BoardController {
                     new File(path).mkdir();
                 }
                 catch (Exception e){
-                    //e.getStackTrace();
+                    e.getStackTrace();
                 }
             }
             if (!files.isEmpty()) {
                 for(MultipartFile file : files){
                     String fileUUID = UUID.randomUUID().toString();
+
                     fileService.saveFile(FileUploadDto.builder()
                         .fileName(fileUUID)
                         .fileOriginName(file.getOriginalFilename())
                         .boardNum(savedBoardNum)
                         .filePath(path+fileUUID)
                         .build());
+
                     file.transferTo(new File(path+fileUUID));
                 }
             }
         }
         catch (Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return new ResponseEntity<>(savedBoardNum, HttpStatus.CREATED);
     }
@@ -93,10 +95,13 @@ public class BoardController {
 
     @DeleteMapping(value = "/{boardNum}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Long> delete(@PathVariable("boardNum") Long boardNum){
-
         boardService.delete(boardNum);
 
-        return new ResponseEntity<>(boardNum, HttpStatus.NO_CONTENT);
+        fileService.getFile(boardNum).forEach(file -> {
+            file.setFileDelete(true);
+            fileService.updateFile(file);
+        });
+        return new ResponseEntity<>(boardNum, HttpStatus.OK);
     }
 
 

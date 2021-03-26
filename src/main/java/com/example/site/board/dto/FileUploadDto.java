@@ -10,6 +10,7 @@ public class FileUploadDto {
     private String fileName;
     private String fileOriginName;
     private String filePath;
+    private boolean fileDelete;
     private long boardNum;
 
     public FileStorage toEntity(){
@@ -17,12 +18,12 @@ public class FileUploadDto {
                 .fileName(fileName)
                 .fileOriginName(fileOriginName)
                 .filePath(filePath)
-                .board_num(boardNum)
+                .boardNum(boardNum)
                 .build();
     }
 
     @Builder
-    public FileUploadDto(String fileName, String fileOriginName, String filePath, long boardNum) {
+    public FileUploadDto(String fileName, String fileOriginName, String filePath,long boardNum) {
         this.fileName = fileName;
         this.fileOriginName = fileOriginName;
         this.filePath = filePath;
